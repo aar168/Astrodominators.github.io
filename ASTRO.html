@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Astrodominators</title>
+
+    <style>
+        /* =========================
+           CONFIGURACIÓN GENERAL
+        ========================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f1f5ff;
+            background: #050817;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1150px, 92%);
+            margin: auto;
+        }
+
+        section {
+            padding: 85px 0;
+            scroll-margin-top: 75px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 45px;
+            color: #b8c4e8;
+        }
+
+        .highlight {
+            color: #64d9ff;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 25px;
+            border-radius: 30px;
+            background: #633cff;
+            color: white;
+            font-weight: bold;
+            border: 1px solid #8f7aff;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #8b70ff;
+            transform: translateY(-3px);
+        }
+
+        /* =========================
+           FONDO DE ESTRELLAS
+        ========================== */
+
+        .stars,
+        .stars::before,
+        .stars::after {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .stars {
+            background-image:
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(#9fbaff 1px, transparent 1px);
+
+            background-size: 75px 75px, 125px 125px;
+            background-position: 0 0, 35px 50px;
+            opacity: 0.45;
+        }
+
+        .stars::before {
+            content: "";
+            background-image:
+                radial-gradient(#ffffff 1px, transparent 1px);
+
+            background-size: 180px 180px;
+            opacity: 0.4;
+        }
+
+        .stars::after {
+            content: "";
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    transparent 0%,
+                    #050817 85%
+                );
+        }
+
+        /* =========================
+           NAVEGACIÓN
+        ========================== */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            background: rgba(5, 8, 23, 0.94);
+            border-bottom: 1px solid #28345b;
+
+            backdrop-filter: blur(12px);
+        }
+
+        nav {
+            min-height: 70px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #64d9ff;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+
+            justify-content: flex-end;
+
+            gap: 18px;
+
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #d5dcff;
+            font-size: 0.9rem;
+
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #64d9ff;
+        }
+
+        /* =========================
+           PORTADA
+        ========================== */
+
+        .hero {
+            min-height: 650px;
+
+            display: flex;
+            align-items: center;
+
+            position: relative;
+            overflow: hidden;
+
+            padding: 100px 0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+
+            text-align: center;
+
+            margin: auto;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.6rem, 7vw, 5.4rem);
+
+            line-height: 1.1;
+
+            margin-bottom: 25px;
+
+            text-shadow:
+                0 0 30px rgba(100, 217, 255, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+
+            color: #c0c9e9;
+
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: #3c4d7c;
+        }
+
+        /* =========================
+           PLANETAS DECORATIVOS
+        ========================== */
+
+        .planet {
+            position: absolute;
+
+            width: 230px;
+            height: 230px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 30% 25%,
+                    #c6f5ff,
+                    #3985e4 35%,
+                    #152d8d 65%,
+                    #080c38
+                );
+
+            box-shadow:
+                0 0 60px rgba(43, 125, 255, 0.45),
+                inset -25px -20px 50px rgba(0, 0, 0, 0.45);
+
+            right: -65px;
+            top: 100px;
+
+            opacity: 0.8;
+        }
+
+        .planet::before {
+            content: "";
+
+            position: absolute;
+
+            width: 310px;
+            height: 65px;
+
+            border: 8px solid rgba(186, 216, 255, 0.6);
+
+            border-radius: 50%;
+
+            transform: rotate(-20deg);
+
+            top: 85px;
+            left: -40px;
+        }
+
+        .planet-small {
+            position: absolute;
+
+            width: 85px;
+            height: 85px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 30% 30%,
+                    #ffe6b0,
+                    #d97d45,
+                    #673a54
+                );
+
+            left: 8%;
+            bottom: 80px;
+
+            box-shadow:
+                0 0 35px rgba(255, 170, 100, 0.2);
+        }
+
+        .astronaut {
+            position: absolute;
+
+            right: 16%;
+            bottom: 65px;
+
+            font-size: 4rem;
+
+            animation:
+                float 5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform:
+                    translateY(0)
+                    rotate(-4deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-20px)
+                    rotate(5deg);
+            }
+        }
+
+        /* =========================
+           TARJETAS
+        ========================== */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+        .card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(24, 33, 70, 0.94),
+                    rgba(11, 16, 40, 0.96)
+                );
+
+            border: 1px solid #303e6d;
+
+            border-radius: 18px;
+
+            padding: 28px;
+
+            transition: 0.3s;
+
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+
+            border-color: #64d9ff;
+
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.7rem;
+
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            color: #ffffff;
+
+            font-size: 1.35rem;
+
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #b8c4e8;
+
+            font-size: 0.95rem;
+        }
+
+        .tag {
+            display: inline-block;
+
+            margin-top: 18px;
+
+            padding: 4px 12px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(100, 217, 255, 0.1);
+
+            color: #64d9ff;
+
+            font-size: 0.8rem;
+        }
+
+        /* =========================
+           DATOS
+        ========================== */
+
+        .facts {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-top: 35px;
+        }
+
+        .fact {
+            text-align: center;
+
+            padding: 25px 15px;
+
+            border-radius: 15px;
+
+            background: #111a39;
+
+            border: 1px solid #2b3a68;
+        }
+
+        .fact strong {
+            display: block;
+
+            font-size: 2rem;
+
+            color: #64d9ff;
+        }
+
+        .fact span {
+            color: #b8c4e8;
+
+            font-size: 0.9rem;
+        }
+
+        /* =========================
+           MISIONES
+        ========================== */
+
+        .mission {
+            display: grid;
+
+            grid-template-columns:
+                0.8fr 1.2fr;
+
+            gap: 40px;
+
+            align-items: center;
+
+            margin-bottom: 65px;
+        }
+
+        .mission:nth-child(even)
+        .mission-visual {
+            order: 2;
+        }
+
+        .mission:nth-child(even)
+        .mission-info {
+            order: 1;
+        }
+
+        .mission-visual {
+            min-height: 330px;
+
+            border-radius: 25px;
+
+            border: 1px solid #344779;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 50% 40%,
+                    #253c7d,
+                    transparent 45%
+                ),
+
+                linear-gradient(
+                    145deg,
+                    #151f48,
+                    #080c24
+                );
+        }
+
+        .mission-visual .big-icon {
+            font-size: 8rem;
+
+            filter:
+                drop-shadow(
+                    0 0 25px
+                    rgba(100, 217, 255, 0.25)
+                );
+        }
+
+        .mission-visual::after {
+            content:
+                "✦  ·  ✧  ·  ✦  ·  ✧";
+
+            position: absolute;
+
+            top: 25px;
+
+            left: 25px;
+
+            right: 25px;
+
+            text-align: center;
+
+            color: #738ac8;
+
+            letter-spacing: 14px;
+        }
+
+        .mission-info h3 {
+            font-size: 2rem;
+
+            color: #64d9ff;
+
+            margin-bottom: 12px;
+        }
+
+        .mission-info p {
+            color: #c2cbe9;
+
+            margin-bottom: 15px;
+        }
+
+        .mission-info ul {
+            padding-left: 22px;
+
+            color: #b8c4e8;
+        }
+
+        .mission-info li {
+            margin-bottom: 7px;
+        }
+
+        .year {
+            color: #ffca75;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           LÍNEA DEL TIEMPO
+        ========================== */
+
+        .timeline {
+            max-width: 850px;
+
+            margin: 0 auto;
+
+            border-left: 2px solid #435a9a;
+
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+
+            margin-bottom: 35px;
+
+            padding: 22px;
+
+            background: #101936;
+
+            border: 1px solid #2d3d6b;
+
+            border-radius: 15px;
+        }
+
+        .timeline-item::before {
+            content: "";
+
+            position: absolute;
+
+            width: 14px;
+            height: 14px;
+
+            background: #64d9ff;
+
+            border: 4px solid #050817;
+
+            border-radius: 50%;
+
+            left: -39px;
+            top: 28px;
+        }
+
+        .timeline-item h3 {
+            color: #ffffff;
+
+            margin-bottom: 5px;
+        }
+
+        .timeline-item p {
+            color: #b8c4e8;
+        }
+
+        /* =========================
+           CURIOSIDADES
+        ========================== */
+
+        .curiosity-box {
+            max-width: 750px;
+
+            margin: auto;
+
+            text-align: center;
+        }
+
+        #fact-text {
+            font-size: 1.1rem;
+
+            color: #dce4ff;
+
+            min-height: 55px;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           EQUIPO
+        ========================== */
+
+        .team {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 25px;
+        }
+
+        .member {
+            text-align: center;
+
+            padding: 35px 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #182346,
+                    #0d132d
+                );
+
+            border: 1px solid #344779;
+
+            border-radius: 20px;
+
+            transition: 0.3s;
+        }
+
+        .member:hover {
+            transform: translateY(-8px);
+
+            border-color: #64d9ff;
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 0, 0, 0.3);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6345e9,
+                    #1c8ebd
+                );
+
+            font-size: 2.4rem;
+
+            border: 3px solid #7d8ee5;
+        }
+
+        .member h3 {
+            color: #ffffff;
+
+            margin-bottom: 5px;
+        }
+
+        .member p {
+            color: #9eadd5;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            padding: 40px 0;
+
+            background: #030511;
+
+            border-top: 1px solid #29375f;
+
+            text-align: center;
+        }
+
+        footer p {
+            color: #8998c1;
+
+            font-size: 0.9rem;
+
+            margin-bottom: 5px;
+        }
+
+        .back-top {
+            margin-top: 15px;
+
+            display: inline-block;
+
+            color: #64d9ff;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1000px) {
+
+            .team {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .cards {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .facts {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .mission {
+                grid-template-columns: 1fr;
+
+                gap: 25px;
+            }
+
+            .mission:nth-child(even)
+            .mission-visual,
+
+            .mission:nth-child(even)
+            .mission-info {
+                order: initial;
+            }
+
+            .planet {
+                width: 150px;
+                height: 150px;
+
+                right: -65px;
+            }
+
+            .planet::before {
+                width: 210px;
+                height: 45px;
+
+                top: 50px;
+                left: -30px;
+            }
+
+            .astronaut {
+                right: 10%;
+
+                bottom: 35px;
+
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                position: static;
+            }
+
+            nav {
+                padding: 15px 0;
+
+                flex-direction: column;
+            }
+
+            .nav-links {
+                justify-content: center;
+
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .cards,
+            .team,
+            .facts {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: 570px;
+
+                padding: 65px 0;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .planet {
+                opacity: 0.35;
+            }
+
+            .planet-small {
+                width: 50px;
+                height: 50px;
+
+                left: 5%;
+
+                bottom: 30px;
+            }
+
+            .astronaut {
+                font-size: 2.5rem;
+
+                right: 5%;
+            }
+
+            .mission-visual {
+                min-height: 240px;
+            }
+
+            .mission-visual .big-icon {
+                font-size: 6rem;
+            }
+
+            .timeline {
+                padding-left: 22px;
+            }
+
+            .timeline-item::before {
+                left: -31px;
+            }
+        }
+    </style>
+</head>
+
+<body id="inicio">
+
+    <!-- Fondo de estrellas -->
+    <div class="stars"></div>
+
+
+    <!-- =========================
+         MENÚ
+    ========================== -->
+
+    <header>
+
+        <div class="container">
+
+            <nav>
+
+                <a href="#inicio" class="logo">
+                    🚀 ASTRO<span>DOMINATORS</span>
+                </a>
+
+                <ul class="nav-links">
+
+                    <li>
+                        <a href="#inicio">Inicio</a>
+                    </li>
+
+                    <li>
+                        <a href="#misiones">Misiones</a>
+                    </li>
+
+                    <li>
+                        <a href="#vehiculos">Vehículos</a>
+                    </li>
+
+                    <li>
+                        <a href="#estacion">ISS</a>
+                    </li>
+
+                    <li>
+                        <a href="#historia">Historia</a>
+                    </li>
+
+                    <li>
+                        <a href="#equipo">Equipo</a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         PORTADA
+    ========================== -->
+
+    <section class="hero">
+
+        <div class="planet"></div>
+
+        <div class="planet-small"></div>
+
+        <div class="astronaut">
+            👨‍🚀
+        </div>
+
+
+        <div class="container hero-content">
+
+            <p class="highlight">
+                🌌 BIENVENIDOS A ASTRODOMINATORS 🌌
+            </p>
+
+            <h1>
+                ASTRO<span class="highlight">DOMINATORS</span>
+                <br>
+                🚀 Explorando el universo
+            </h1>
+
+            <p>
+                Descubre las misiones, naves, estaciones y robots
+                que han permitido a la humanidad explorar más allá
+                de nuestro planeta.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="#misiones" class="btn">
+                    Explorar el espacio 🚀
+                </a>
+
+                <a href="#equipo"
+                   class="btn btn-secondary">
+                    Conocer al equipo
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         INTRODUCCIÓN
+    ========================== -->
+
+    <section id="exploracion">
+
+        <div class="container">
+
+            <h2 class="section-title">
+                La aventura espacial
+            </h2>
+
+            <p class="section-subtitle">
+                Desde el primer satélite artificial hasta los robots
+                que recorren Marte, la exploración espacial demuestra
+                la capacidad humana para investigar lo desconocido.
+            </p>
+
+
+            <div class="cards">
+
+                <article class="card">
+
+                    <div class="card-icon">
+                        🛰️
+                    </div>
+
+                    <h3>
+                        Satélites
+                    </h3>
+
+                    <p>
+                        Los satélites permiten estudiar la Tierra,
+                        observar el universo, mejorar las comunicaciones
+                        y obtener información científica.
+                    </p>
+
+                </article>
+
+
+                <article class="card">
+
+                    <div class="card-icon">
+                        🌕
+                    </div>
+
+                    <h3>
+                        Exploración lunar
+                    </h3>
+
+                    <p>
+                        Las misiones Apolo llevaron seres humanos a la
+                        Luna y ampliaron el conocimiento sobre nuestro
+                        satélite natural.
+                    </p>
+
+                </article>
+
+
+                <article class="card">
+
+                    <div class="card-icon">
+                        🔭
+                    </div>
+
+                    <h3>
+                        Investigación científica
+                    </h3>
+
+                    <p>
+                        Telescopios, estaciones espaciales y sondas
+                        ayudan a estudiar planetas, estrellas, galaxias
+                        y los fenómenos del universo.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         DATOS
+    ========================== -->
+
+    <section>
+
+        <div class="container">
+
+            <h2 class="section-title">
+                El espacio en cifras
+            </h2>
+
+            <p class="section-subtitle">
+                Algunos datos destacados de la exploración espacial.
+            </p>
+
+
+            <div class="facts">
+
+                <div class="fact">
+
+                    <strong>
+                        1957
+                    </strong>
+
+                    <span>
+                        Lanzamiento del Sputnik 1
+                    </span>
+
+                </div>
+
+
+                <div class="fact">
+
+                    <strong>
+                        1969
+                    </strong>
+
+                    <span>
+                        Primera llegada humana a la Luna
+                    </span>
+
+                </div>
+
+
+                <div class="fact">
+
+                    <strong>
+                        1998
+                    </strong>
+
+                    <span>
+                        Inicio del ensamblaje de la ISS
+                    </span>
+
+                </div>
+
+
+                <div class="fact">
+
+                    <strong>
+                        2021
+                    </strong>
+
+                    <span>
+                        Aterrizaje del rover Perseverance
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MISIONES
+    ========================== -->
+
+    <section id="misiones">
+
+        <div class="container">
+
+            <h2 class="section-title">
+                Misiones que hicieron historia
+            </h2>
+
+            <p class="section-subtitle">
+                Conoce algunos de los proyectos más importantes de
+                la historia de la exploración espacial.
+            </p>
+
+
+            <!-- SPUTNIK 1 -->
+
+            <article class="mission">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🛰️
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        1957 · UNIÓN SOVIÉTICA
+                    </span>
+
+                    <h3>
+                        Sputnik 1
+                    </h3>
+
+                    <p>
+                        El Sputnik 1 fue el primer satélite artificial
+                        de la Tierra. Fue lanzado el 4 de octubre de
+                        1957 y marcó el comienzo de la era espacial.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Tenía una forma esférica y cuatro antenas.
+                        </li>
+
+                        <li>
+                            Transmitía señales de radio desde la órbita.
+                        </li>
+
+                        <li>
+                            Demostró que era posible colocar un objeto
+                            artificial alrededor de la Tierra.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Primer satélite artificial
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- APOLO 11 -->
+
+            <article class="mission">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🌕
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        1969 · NASA
+                    </span>
+
+                    <h3>
+                        Apolo 11
+                    </h3>
+
+                    <p>
+                        La misión Apolo 11 llevó a los astronautas
+                        Neil Armstrong, Buzz Aldrin y Michael Collins
+                        a la Luna. Fue lanzada el 16 de julio de 1969.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            El módulo lunar Eagle aterrizó el 20 de julio.
+                        </li>
+
+                        <li>
+                            Neil Armstrong y Buzz Aldrin caminaron
+                            sobre la superficie lunar.
+                        </li>
+
+                        <li>
+                            Michael Collins permaneció en órbita lunar.
+                        </li>
+
+                        <li>
+                            La tripulación regresó a la Tierra el 24 de julio.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Primera misión tripulada que aterrizó en la Luna
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- SATURN V -->
+
+            <article class="mission" id="vehiculos">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🚀
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        1967–1973 · NASA
+                    </span>
+
+                    <h3>
+                        Saturn V
+                    </h3>
+
+                    <p>
+                        El Saturn V fue un enorme cohete utilizado
+                        para lanzar las misiones Apolo hacia la Luna.
+                        Es uno de los cohetes más grandes y potentes
+                        empleados en vuelos espaciales tripulados.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Tenía tres etapas principales.
+                        </li>
+
+                        <li>
+                            Medía aproximadamente 110 metros de altura.
+                        </li>
+
+                        <li>
+                            Utilizaba combustible líquido en sus etapas.
+                        </li>
+
+                        <li>
+                            Fue el vehículo de lanzamiento de Apolo 11.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Cohete lunar
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- SPACE SHUTTLE -->
+
+            <article class="mission">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🛸
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        1981–2011 · NASA
+                    </span>
+
+                    <h3>
+                        Space Shuttle
+                    </h3>
+
+                    <p>
+                        El programa Space Shuttle, conocido como
+                        transbordador espacial, utilizó vehículos
+                        parcialmente reutilizables para transportar
+                        astronautas, satélites y laboratorios al espacio.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Realizó su primer vuelo en 1981.
+                        </li>
+
+                        <li>
+                            Contaba con un orbitador, un tanque externo
+                            y dos propulsores sólidos.
+                        </li>
+
+                        <li>
+                            Ayudó a construir y mantener la Estación
+                            Espacial Internacional.
+                        </li>
+
+                        <li>
+                            El programa finalizó en 2011.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Transporte espacial reutilizable
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- ESTACIÓN ESPACIAL INTERNACIONAL -->
+
+            <article class="mission" id="estacion">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🛰️
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        DESDE 1998 · COOPERACIÓN INTERNACIONAL
+                    </span>
+
+                    <h3>
+                        Estación Espacial Internacional
+                    </h3>
+
+                    <p>
+                        La Estación Espacial Internacional, conocida
+                        como ISS, es un laboratorio científico situado
+                        en órbita baja terrestre. Es un proyecto de
+                        cooperación entre distintas agencias espaciales.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Su ensamblaje comenzó en 1998.
+                        </li>
+
+                        <li>
+                            Orbita la Tierra aproximadamente a 400 km
+                            de altitud, aunque su altura varía.
+                        </li>
+
+                        <li>
+                            Se utiliza para investigaciones en microgravedad.
+                        </li>
+
+                        <li>
+                            Ha recibido astronautas de numerosos países.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Laboratorio orbital
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- PERSEVERANCE -->
+
+            <article class="mission">
+
+                <div class="mission-visual">
+
+                    <div class="big-icon">
+                        🤖
+                    </div>
+
+                </div>
+
+
+                <div class="mission-info">
+
+                    <span class="year">
+                        2021 · NASA · MARTE
+                    </span>
+
+                    <h3>
+                        Rover Perseverance
+                    </h3>
+
+                    <p>
+                        Perseverance es un vehículo robótico de
+                        exploración enviado a Marte por la NASA.
+                        Aterrizó en el cráter Jezero el 18 de febrero
+                        de 2021.
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Investiga rocas y sedimentos marcianos.
+                        </li>
+
+                        <li>
+                            Busca señales de ambientes que pudieron
+                            ser habitables en el pasado.
+                        </li>
+
+                        <li>
+                            Recolecta y almacena muestras para posibles
+                            futuras misiones.
+                        </li>
+
+                        <li>
+                            Transportó el helicóptero experimental
+                            Ingenuity.
+                        </li>
+
+                    </ul>
+
+
+                    <span class="tag">
+                        Exploración de Marte
+                    </span>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         LÍNEA DEL TIEMPO
+    ========================== -->
+
+    <section id="historia">
+
+        <div class="container">
+
+            <h2 class="section-title">
+                Línea del tiempo espacial
+            </h2>
+
+            <p class="section-subtitle">
+                Un recorrido por algunos acontecimientos importantes.
+            </p>
+
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+
+                    <h3>
+                        1957 — Sputnik 1
+                    </h3>
+
+                    <p>
+                        La humanidad coloca por primera vez un satélite
+                        artificial en órbita terrestre.
+                    </p>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        1969 — Apolo 11
+                    </h3>
+
+                    <p>
+                        Los seres humanos llegan a la superficie de la
+                        Luna por primera vez.
+                    </p>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        1981 — Primer vuelo del Space Shuttle
+                    </h3>
+
+                    <p>
+                        Comienza una nueva etapa de vuelos espaciales
+                        con vehículos parcialmente reutilizables.
+                    </p>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        1998 — Estación Espacial Internacional
+                    </h3>
+
+                    <p>
+                        Comienza el ensamblaje de una estación orbital
+                        internacional destinada a la investigación.
+                    </p>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <h3>
+                        2021 — Perseverance en Marte
+                    </h3>
+
+                    <p>
+                        El rover aterriza en el cráter Jezero para
+                        estudiar el pasado geológico del planeta rojo.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CURIOSIDADES
+    ========================== -->
+
+    <section id="curiosidades">
+
+        <div class="container">
+
+            <h2 class="section-title">
+                ¿Sabías que...?
+            </h2>
+
+            <p class="section-subtitle">
+                Presiona el botón para descubrir un dato espacial.
+            </p>
+
+
+            <div class="card curiosity-box">
+
+                <div class="card-icon">
+                    ✨
+                </div>
+
+                <p id="fact-text">
+                    El espacio está lleno de fenómenos sorprendentes.
+                </p>
+
+
+                <button class="btn" id="fact-button">
+                    Mostrar curiosidad 🚀
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         INTEGRANTES
+    ========================== -->
+
+    <section id="equipo">
+
+        <div class="container">
+
+            <h2 class="section-title">
+                Integrantes del grupo
+            </h2>
+
+            <p class="section-subtitle">
+                Conoce a los integrantes que realizaron este proyecto
+                sobre la exploración espacial.
+            </p>
+
+
+            <div class="team">
+
+                <!-- DIANA -->
+
+                <article class="member">
+
+                    <div class="avatar">
+                        👩‍🚀
+                    </div>
+
+                    <h3>
+                        Diana Franco
+                    </h3>
+
+                    <p>
+                        Integrante del grupo
+                    </p>
+
+                </article>
+
+
+                <!-- GEOVANNI -->
+
+                <article class="member">
+
+                    <div class="avatar">
+                        👨‍🚀
+                    </div>
+
+                    <h3>
+                        Geovanni Rivas
+                    </h3>
+
+                    <p>
+                        Integrante del grupo
+                    </p>
+
+                </article>
+
+
+                <!-- AARON -->
+
+                <article class="member">
+
+                    <div class="avatar">
+                        👨‍🚀
+                    </div>
+
+                    <h3>
+                        Aaron Díaz
+                    </h3>
+
+                    <p>
+                        Integrante del grupo
+                    </p>
+
+                </article>
+
+
+                <!-- KARLA -->
+
+                <article class="member">
+
+                    <div class="avatar">
+                        👩‍🚀
+                    </div>
+
+                    <h3>
+                        Karla Orellana
+                    </h3>
+
+                    <p>
+                        Integrante del grupo
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <div class="container">
+
+            <p>
+                🚀 Astrodominators · Proyecto escolar
+            </p>
+
+            <p>
+                El conocimiento nos lleva más allá de las estrellas. 🌌
+            </p>
+
+            <a href="#inicio" class="back-top">
+                ⬆ Volver al inicio
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        const curiosities = [
+
+            "El Sputnik 1 emitía señales de radio que podían ser recibidas desde la Tierra.",
+
+            "El Saturn V medía aproximadamente 110 metros de altura.",
+
+            "La Estación Espacial Internacional viaja alrededor de la Tierra a gran velocidad.",
+
+            "Perseverance aterrizó en Marte el 18 de febrero de 2021.",
+
+            "La Luna tarda aproximadamente 27,3 días en completar una vuelta alrededor de la Tierra respecto a las estrellas.",
+
+            "El Sol es una estrella y contiene la mayor parte de la masa del sistema solar.",
+
+            "El Space Shuttle podía transportar instrumentos científicos y satélites al espacio.",
+
+            "Marte tiene una atmósfera mucho más delgada que la de la Tierra."
+
+        ];
+
+
+        const factText =
+            document.getElementById("fact-text");
+
+        const factButton =
+            document.getElementById("fact-button");
+
+
+        let lastFact = -1;
+
+
+        factButton.addEventListener(
+            "click",
+            function () {
+
+                let randomIndex;
+
+
+                do {
+
+                    randomIndex =
+                        Math.floor(
+                            Math.random() *
+                            curiosities.length
+                        );
+
+                } while (
+                    randomIndex === lastFact &&
+                    curiosities.length > 1
+                );
+
+
+                lastFact = randomIndex;
+
+
+                factText.textContent =
+                    curiosities[randomIndex];
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+
+
